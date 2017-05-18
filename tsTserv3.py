@@ -1,25 +1,26 @@
+# Echo server program
 from socket import *
 from time import ctime
 
-HOST=''
-PORT=18888
-BUFSIZ=1024
-ADDR=(HOST,PORT)
+HOST = ''  # Symbolic name meaning all available interfaces
+PORT = 21567  # Arbitrary non-privileged port
+BUFSIZE = 1024
+ADDR = (HOST, PORT)
 
-tcpSerSock=socket(AF_INET,SOCK_STREAM)
+tcpSerSock = socket(AF_INET, SOCK_STREAM)
 tcpSerSock.bind(ADDR)
 tcpSerSock.listen(5)
 
 while True:
-    print('wating for connect')
-    tcpCliSock,addr=tcpSerSock.accept()
-    print("connect from",addr)
+    print('waiting for connection...')
+    tcpCliSock, addr = tcpSerSock.accept()
+    print('...connected from:', addr)
+
     while True:
-        data=tcpCliSock.recv(BUFSIZ)
+        data = tcpCliSock.recv(BUFSIZE)
         if not data:
             break
-        tcpCliSock.send('[%s] %s' %(bytes(ctime(),'utf-8'),data).encode())
+        tcpCliSock.send(('[%s] %s' % (ctime(), data)).encode())
 
     tcpCliSock.close()
-
 tcpSerSock.close()
